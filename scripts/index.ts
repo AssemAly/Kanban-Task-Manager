@@ -64,12 +64,14 @@ function updateTask(
   const taskIndex = tasks.findIndex((t: Task) => t.id === taskId);
 
   if (taskIndex !== -1) {
+    const existingTask = tasks[taskIndex]!;
     tasks[taskIndex] = {
-      ...tasks[taskIndex],
+      id: existingTask.id,
       title: title,
       description: description,
       priority: TaskPriority[priority],
       dueDate: dueDate,
+      status: existingTask.status,
     };
 
     localStorage.setItem("tasks", JSON.stringify(tasks));
@@ -267,7 +269,7 @@ function handleDeleteTask(taskId: string) {
     cancelButtonColor: "#6B7280",
     confirmButtonText: "Yes, delete it!",
     cancelButtonText: "Cancel",
-  }).then((result) => {
+  }).then((result: any) => {
     if (result.isConfirmed) {
       const tasks = JSON.parse(localStorage.getItem("tasks") || "[]");
       const updatedTasks = tasks.filter((task: Task) => task.id !== taskId);
@@ -317,7 +319,7 @@ function updateTaskStatus(taskId: string | null, newStatus: TaskStatus) {
   if (!taskId) return;
   const tasks = JSON.parse(localStorage.getItem("tasks") || "[]") as Task[];
   const taskIndex = tasks.findIndex((t: Task) => t.id === taskId);
-  if (taskIndex !== -1) {
+  if (taskIndex !== -1 && tasks[taskIndex]) {
     tasks[taskIndex].status = newStatus;
     localStorage.setItem("tasks", JSON.stringify(tasks));
     renderTasks();

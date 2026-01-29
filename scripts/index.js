@@ -49,7 +49,15 @@ function updateTask(taskId, title, description, priority, dueDate) {
     const tasks = JSON.parse(localStorage.getItem("tasks") || "[]");
     const taskIndex = tasks.findIndex((t) => t.id === taskId);
     if (taskIndex !== -1) {
-        tasks[taskIndex] = Object.assign(Object.assign({}, tasks[taskIndex]), { title: title, description: description, priority: TaskPriority[priority], dueDate: dueDate });
+        const existingTask = tasks[taskIndex];
+        tasks[taskIndex] = {
+            id: existingTask.id,
+            title: title,
+            description: description,
+            priority: TaskPriority[priority],
+            dueDate: dueDate,
+            status: existingTask.status,
+        };
         localStorage.setItem("tasks", JSON.stringify(tasks));
         Swal.fire({
             title: "Task Updated Successfully",
@@ -268,7 +276,7 @@ function updateTaskStatus(taskId, newStatus) {
         return;
     const tasks = JSON.parse(localStorage.getItem("tasks") || "[]");
     const taskIndex = tasks.findIndex((t) => t.id === taskId);
-    if (taskIndex !== -1) {
+    if (taskIndex !== -1 && tasks[taskIndex]) {
         tasks[taskIndex].status = newStatus;
         localStorage.setItem("tasks", JSON.stringify(tasks));
         renderTasks();
