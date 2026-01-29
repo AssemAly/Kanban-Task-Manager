@@ -19,7 +19,14 @@ const completedContainer = Helper.getElementById<HTMLDivElement>(
 );
 let isEditMode = false;
 let editingTaskId: string | null = null;
-
+const modalElement = document.getElementById("addTaskModal");
+if (modalElement) {
+  modalElement.addEventListener("hidden.bs.modal", () => {
+    console.log("Modal closed");
+    resetEditMode();
+    clearForm();
+  });
+}
 renderTasks();
 function addTask() {
   if (!titleInput.reportValidity()) {

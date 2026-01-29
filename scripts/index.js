@@ -11,6 +11,14 @@ const progressContainer = Helper.getElementById("progress-container");
 const completedContainer = Helper.getElementById("completed-container");
 let isEditMode = false;
 let editingTaskId = null;
+const modalElement = document.getElementById("addTaskModal");
+if (modalElement) {
+    modalElement.addEventListener("hidden.bs.modal", () => {
+        console.log("Modal closed");
+        resetEditMode();
+        clearForm();
+    });
+}
 renderTasks();
 function addTask() {
     if (!titleInput.reportValidity()) {
